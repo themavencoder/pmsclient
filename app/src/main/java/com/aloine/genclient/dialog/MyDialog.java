@@ -1,5 +1,6 @@
 package com.aloine.genclient.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
@@ -93,16 +94,65 @@ public class MyDialog extends DialogFragment implements OnDeviceClickListener {
          getDialog().hide();
         progressCallBack.showProgressBar();
 
-        final Thread thread = new Thread() {
+  new Thread() {
+
+      public void run() {
+        boolean fail = false;
+        BluetoothDevice device = adapter.getRemoteDevice(address);
+
+        try {
+            mBluetoothSocket = createBluetoothSocket(device);
+        } catch (IOException e) {
+            fail = true;
+            Toast.makeText(getActivity(), "Socket creation failed", Toast.LENGTH_SHORT).show();
+        }
+
+        try {
+            mBluetoothSocket.connect();
+        } catch (IOException e) {
+            try {
+                fail = true;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressCallBack.hideProgressBar();
+                    }
+                });
+                mBluetoothSocket.close();
+                mHandler.obtainMessage(CONNECTING_STATUS, -1,-1).sendToTarget();
+            } catch (IOException ee) {
+                Toast.makeText(getActivity(), "Socket creation failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (fail == false) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressCallBack.hideProgressBar();
+                }
+            });
+            sendAndReceiveThread = new SendAndReceiveThread(mBluetoothSocket,mHandler);
+            sendAndReceiveThread.start();
+
+            mHandler.obtainMessage(CONNECTING_STATUS,-1,-1,name);
+        }
+      }
+  }.start();
+
+
+
+        /*final Thread thread = new Thread() {
             @Override
             public void run() {
+
 
                 boolean fail = false;
                 BluetoothDevice device = adapter.getRemoteDevice(address);
                 try {
+
                     mBluetoothSocket = createBluetoothSocket(device);
                 } catch (IOException e) {
-                    progressCallBack.hideProgressBar();
+
                     fail = true;
                     Toast.makeText(getActivity(), "Socket creation failed", Toast.LENGTH_SHORT).show();
                 }
@@ -110,9 +160,16 @@ public class MyDialog extends DialogFragment implements OnDeviceClickListener {
                     mBluetoothSocket.connect();
                 } catch (IOException ex) {
                     try {
-                        progressCallBack.hideProgressBar();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressCallBack.hideProgressBar();
+                            }
+                        });
+
                         fail = true;
                         mBluetoothSocket.close();
+
                         mHandler.obtainMessage(CONNECTING_STATUS, 1, -1, name).sendToTarget();
 
                     } catch (IOException ee) {
@@ -120,7 +177,13 @@ public class MyDialog extends DialogFragment implements OnDeviceClickListener {
                     }
                 }
                 if (fail == false) {
-                    progressCallBack.hideProgressBar();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressCallBack.hideProgressBar();
+                        }
+                    });
+
                     sendAndReceiveThread = new SendAndReceiveThread(mBluetoothSocket, mHandler);
                     sendAndReceiveThread.start();
 
@@ -131,9 +194,11 @@ public class MyDialog extends DialogFragment implements OnDeviceClickListener {
             }
         };
 
+
+
         thread.start();
 
-
+*/
     }
 
     private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {

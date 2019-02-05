@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     else
                        // progressBar.setVisibility(View.GONE);
                         Toast.makeText(MainActivity.this, "Connection Failed", Toast.LENGTH_SHORT).show();
+                            myDialog.dismiss();
 
                        // mBluetoothStatus.setText("Connection Failed");
                 }
@@ -193,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void hideProgressBar() {
         progressBar.setVisibility(View.INVISIBLE);
+
     }
 
 }

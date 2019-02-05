@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardview_item"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="16dp"
+
+    android:layout_height="wrap_content">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:orientation="vertical"
+
+       android:layout_height="match_parent">
+
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginBottom="4dp"
+           android:orientation="horizontal"
+           >
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textColor="@color/black"
+               android:text="Device Name: "
+               android:layout_marginLeft="4dp"
+               android:layout_marginTop="4dp"
+               />
+           <TextView
+               android:layout_width="wrap_content"
+               android:id="@+id/textview_device_name"
+               android:textColor="@color/black"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="4dp"
+               tools:text="Techno Phantom"
+               />
+
+
+       </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginBottom="4dp"
+           android:orientation="horizontal"
+           >
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="MAC Address: "
+               android:textColor="@color/black"
+               android:layout_marginLeft="4dp"
+               android:layout_marginTop="4dp"
+               />
+           <TextView
+               android:layout_width="wrap_content"
+               android:textColor="@color/black"
+               android:id="@+id/textview_device_mac"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="4dp"
+               tools:text="32:34:32:22:44:42"
+               />
+
+
+       </LinearLayout>
+
+   </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

@@ -21,6 +21,7 @@ import com.aloine.genclient.DeviceInfo;
 import com.aloine.genclient.MainActivity;
 import com.aloine.genclient.OnDeviceClickListener;
 import com.aloine.genclient.Persistor;
+import com.aloine.genclient.ProgressCallBack;
 import com.aloine.genclient.R;
 import com.aloine.genclient.RecyclerAdapter;
 import com.aloine.genclient.SendAndReceiveThread;
@@ -42,9 +43,14 @@ public class MyDialog extends DialogFragment implements OnDeviceClickListener {
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private Handler mHandler;
     private SendAndReceiveThread sendAndReceiveThread;
+    private ProgressCallBack progressCallBack;
 
     public MyDialog() {
 
+    }
+
+    public void setProgressCallBack(ProgressCallBack progressCallBack) {
+        this.progressCallBack = progressCallBack;
     }
 
     public void setHandler(Handler handler) {
@@ -85,15 +91,18 @@ public class MyDialog extends DialogFragment implements OnDeviceClickListener {
         final String name = deviceInfo.getNameOfDevice();
         final String address = deviceInfo.getMacAddress();
          getDialog().hide();
+        progressCallBack.showProgressBar();
 
         final Thread thread = new Thread() {
             @Override
             public void run() {
+
                 boolean fail = false;
                 BluetoothDevice device = adapter.getRemoteDevice(address);
                 try {
                     mBluetoothSocket = createBluetoothSocket(device);
                 } catch (IOException e) {
+                    progressCallBack.hideProgressBar();
                     fail = true;
                     Toast.makeText(getActivity(), "Socket creation failed", Toast.LENGTH_SHORT).show();
                 }
@@ -101,6 +110,7 @@ public class MyDialog extends DialogFragment implements OnDeviceClickListener {
                     mBluetoothSocket.connect();
                 } catch (IOException ex) {
                     try {
+                        progressCallBack.hideProgressBar();
                         fail = true;
                         mBluetoothSocket.close();
                         mHandler.obtainMessage(CONNECTING_STATUS, 1, -1, name).sendToTarget();
@@ -110,6 +120,7 @@ public class MyDialog extends DialogFragment implements OnDeviceClickListener {
                     }
                 }
                 if (fail == false) {
+                    progressCallBack.hideProgressBar();
                     sendAndReceiveThread = new SendAndReceiveThread(mBluetoothSocket, mHandler);
                     sendAndReceiveThread.start();
 

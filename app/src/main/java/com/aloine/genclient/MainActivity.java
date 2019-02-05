@@ -29,7 +29,7 @@ import static com.aloine.genclient.Constants.CONNECTING_STATUS;
 import static com.aloine.genclient.Constants.MESSAGE_READ;
 import static com.aloine.genclient.Constants.REQUEST_BLUETOOTH_ENABLE;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ProgressCallBack {
     private BluetoothAdapter mBluetoothAdapter;
     private CoordinatorLayout mCoordinatorLayout;
     private Button mButtonEstablishConnection, mButtonCheckGauge;
@@ -54,7 +54,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         activateBluetooth();
         myDialog = new MyDialog();
         mHandler = getmHandler();
+        myDialog.setProgressCallBack(this);
         myDialog.setHandler(mHandler);
+
        sendAndReceiveThread =  myDialog.getSendAndReceiveData();
     }
 
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
+                    mTextGauge.setText("");
                     mTextGauge.setText(readMessage);
                 }
 
@@ -180,4 +183,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
 }

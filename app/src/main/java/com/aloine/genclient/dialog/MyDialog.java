@@ -134,7 +134,7 @@ public class MyDialog extends DialogFragment implements OnDeviceClickListener {
             sendAndReceiveThread = new SendAndReceiveThread(mBluetoothSocket,mHandler);
             sendAndReceiveThread.start();
 
-            mHandler.obtainMessage(CONNECTING_STATUS,-1,-1,name);
+            mHandler.obtainMessage(CONNECTING_STATUS,1,-1,name);
         }
       }
   }.start();

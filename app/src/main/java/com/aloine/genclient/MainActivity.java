@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         sendAndReceiveThread.writeToDevice("2");
                     }
                     else {
-                        Toast.makeText(this, "null reference", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Unable to get text from device", Toast.LENGTH_SHORT).show();
                     }
                     break;
             default:
@@ -188,12 +188,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
+        mButtonEstablishConnection.setEnabled(false);
     }
 
 
     @Override
     public void hideProgressBar() {
         progressBar.setVisibility(View.INVISIBLE);
+        mButtonEstablishConnection.setEnabled(true);
 
     }
 
